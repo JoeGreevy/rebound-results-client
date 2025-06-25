@@ -1,0 +1,36 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+th button{
+  font-size: 0.8em;
+}
+.selectSubject {
+  font-size: 2em;
+}
+.selectSubject option{
+  font-size: 0.4em;
+}
+
+table {
+  border-collapse: collapse;
+}
+tr select {
+  font-size: 1.1em;
+  text-align: center;
+  font-weight: bold;
+}
+
+.graphNav{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 30px;
+}
+
+
+
+
+
