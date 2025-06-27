@@ -1,4 +1,4 @@
-export const featureNames = {
+export const featureNames: { [key: string]: string } = {
     "idx": "Index",
     "start_time" : "Time (s)",
     "rsi": "RSI (s/s)",

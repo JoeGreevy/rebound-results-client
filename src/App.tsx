@@ -1,9 +1,15 @@
-import { React, useState, useEffect, useMemo } from 'react'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { useState, useEffect  } from 'react'
+// import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { createBrowserRouter,  RouterProvider, Navigate} from 'react-router-dom';
 
 import Subject from './components/Subject.jsx'
 import InterSubject from './components/InterSubject.jsx'
+import Layout from './components/Layout'
 import './App.css'
+
+
+
+
 
 function App() {
   
@@ -16,7 +22,7 @@ function App() {
   }, []);
 
   // Selected Subject and their mass
-  const [selectedId, setSelectedId] = useState('SN129');
+  const [selectedId, setSelectedId] = useState('SN125');
   // const [mass, setMass] = useState(0);
   // useEffect(() => {
   //   fetch((`/api/${selectedId}/mass`)).then((res) => res.json()).then((data) => {
@@ -25,35 +31,37 @@ function App() {
   // }, [selectedId]);
 
   // // Columns to display in the table
-  // const [columns, setColumns] = useState(Object.keys(featureNames).slice(0, 4))
-
   
+
+  const router = createBrowserRouter([
+    {
+      element: <Layout selectedId = {selectedId} />,
+      children: [
+        { path: '/', element: <Navigate to="/subjects/graph" /> },
+        { path: '/subjects/graph', element: <InterSubject /> },
+        { path: '/subjects/table', element: <InterSubject /> },
+        { path: '/subjects/:selectedId/table', element: < Subject selectedId={ selectedId } setSelectedId={ setSelectedId} ids= {ids}/> },
+        { path: '/subjects/:selectedId/graph', element: < Subject selectedId={ selectedId } setSelectedId={ setSelectedId} ids= {ids}/> },
+      ]
+    },
+  ])
 
   return (
     <>
-    <Router>
+    {/* <Router>
       <nav>
         <Link to="/">Study</Link> |{' '}
         <Link to="/:selectedId">Tables</Link>
       </nav>
+      <h5>Filter Cohorts</h5>
       <Routes>
         <Route path="/" element={<InterSubject /> } />
         <Route path="/:selectedId" element={< Subject selectedId={ selectedId } setSelectedId={ setSelectedId} ids= {ids} />} />
       </Routes>
-    </Router>
+    </Router> */}
+    <RouterProvider router={router} />
     
-    
-    {/* <div>
-      < SelectSubject setSelectedId={setSelectedId} ids={ids} id={selectedId} />
-      <span>Weight: {mass} kg ({(mass*9.81).toFixed(0)} N)</span>
-      < DownloadButton selectedId={selectedId} features={columns} mass={mass} />
-    </div> */}
-      
-      
-      {/* Choose Columns */}
-
-      {/* Results Table: Pass the selectedID and the columns to search for */}
-      {/* < JumpTable selectedId={selectedId} columns={columns} setColumns={setColumns} /> */}
+  
      
     </> 
   )

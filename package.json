@@ -11,6 +11,7 @@
     "api": "cd ../api && python -m flask --app app run --no-debugger"
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "mathjs": "^14.5.2",
     "plotly.js": "^3.0.1",
     "react": "^19.1.0",
@@ -20,8 +21,11 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@types/lodash": "^4.17.19",
+    "@types/plotly.js": "^3.0.2",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
+    "@types/react-plotly.js": "^2.6.3",
     "@vitejs/plugin-react": "^4.6.0",
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",

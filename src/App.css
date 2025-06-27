@@ -17,6 +17,9 @@ th button{
 table {
   border-collapse: collapse;
 }
+td{
+  border: 1px solid black;
+}
 tr select {
   font-size: 1.1em;
   text-align: center;
@@ -30,7 +33,13 @@ tr select {
   padding-top: 30px;
 }
 
+a {
+  color: rgb(59, 59, 59);
+}
 
+.active {
+  font-weight: bold;
+}
 
 
 

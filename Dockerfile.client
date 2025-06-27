@@ -3,7 +3,7 @@ WORKDIR /study-results/client
 
 ENV PATH=/node_modules/.bin:$PATH
 
-COPY package.json package-lock.json index.html vite.config.js eslint.config.js ./
+COPY package.json package-lock.json tsconfig.json index.html vite.config.js eslint.config.js ./
 COPY ./src ./src
 COPY ./public ./public
 RUN npm install
