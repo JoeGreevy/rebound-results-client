@@ -19,7 +19,7 @@ function JumpTable({ selectedId, columns, setColumns }: JumpTableProps) {
   useEffect(() => {
     setLoading(true);
 
-    fetch(`https://rebound-results-api.onrender.com/api/subjects/${selectedId}/${cols}`)
+    fetch(`${import.meta.env.VITE_API}/api/subjects/${selectedId}/${cols}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("Jump data:", data);

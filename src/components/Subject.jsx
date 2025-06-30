@@ -11,7 +11,7 @@ function Subject( { selectedId, setSelectedId, ids,} ) {
   
   const [mass, setMass] = useState(0);
   useEffect(() => {
-    fetch((`https://rebound-results-api.onrender.com/api/${selectedId}/mass`)).then((res) => res.json()).then((data) => {
+    fetch((`${import.meta.env.VITE_API}/api/${selectedId}/mass`)).then((res) => res.json()).then((data) => {
       setMass(data);
     }).catch(err => console.error("Error fetching mass:", err));
   }, [selectedId]);

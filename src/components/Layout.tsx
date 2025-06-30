@@ -3,16 +3,18 @@ import { Outlet } from 'react-router-dom';
 import NavBar from './NavBar';
 
 interface LayoutProps {
-    selectedId?: string;
+    selectedId: string;
+    cohortMask: number[];
+    setCohortMask: (mask: number[]) => void;
 }
 
-function Layout({ selectedId }:LayoutProps) {
+function Layout({ selectedId, cohortMask, setCohortMask }:LayoutProps) {
 
 
     return (
         <>
             <header>
-                <NavBar selectedId={selectedId} />
+                <NavBar selectedId={selectedId} cohortMask={ cohortMask } setCohortMask = { setCohortMask } />
             </header>
             <main>
                 <Outlet />

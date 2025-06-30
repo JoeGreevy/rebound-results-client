@@ -2,7 +2,7 @@ function DownloadButton({ selectedId, features, mass }) {
     const feats = features.join("-");
     const handleDownload = async () => {
         try {
-            const response = await fetch(`https://rebound-results-api.onrender.com/api/download_csv/${selectedId}/${feats}`);
+            const response = await fetch(`${import.meta.env.VITE_API}/api/download_csv/${selectedId}/${feats}`);
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);

@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import { useState, useEffect  } from 'react'
 // import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { createBrowserRouter,  RouterProvider, Navigate} from 'react-router-dom';
@@ -7,6 +9,8 @@ import InterSubject from './components/InterSubject.jsx'
 import Layout from './components/Layout'
 import './App.css'
 
+import { cohorts } from './assets/cohorts'
+
 
 
 
@@ -14,12 +18,34 @@ import './App.css'
 function App() {
   
   // Get all subject IDs from server
+  // Based on cohort radio buttons ticked in navBar
   const [ids, setIds] = useState([]);
+  const [subjData, setSubjData] = useState({})
+  const [cohortMask, setCohortMask] = useState([1, 0, 0]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetch('https://rebound-results-api.onrender.com/api/ids').then((res) => res.json())
-                      .then((data) => { setIds(data.ids)  })
+    fetch(`${import.meta.env.VITE_API}/api/ids`, 
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(cohorts["values"].filter((_:any, i:number) => cohortMask[i] === 1)), // Empty array to get all IDs
+      }
+    ).then((res) => {
+      if(!res.ok) {
+        throw new Error(`HTTP error in getting IDs! status: ${res.status}`);
+      }
+      return res.json();
+    }).then((data) => { 
+      console.log("Data is ", data);
+      const tempIds = data.map((d:any) => d.index)
+      setIds(tempIds)  
+      setSubjData(data)
+      setLoading(false)
+    })
                       .catch(err => console.error("Error fetching ids:", err));
-  }, []);
+  }, [cohortMask]);
 
   // Selected Subject and their mass
   const [selectedId, setSelectedId] = useState('SN125');
@@ -32,14 +58,17 @@ function App() {
 
   // // Columns to display in the table
   
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   const router = createBrowserRouter([
     {
-      element: <Layout selectedId = {selectedId} />,
+      element: <Layout selectedId = {selectedId} cohortMask={cohortMask} setCohortMask={setCohortMask} />,
       children: [
         { path: '/', element: <Navigate to="/subjects/graph" /> },
-        { path: '/subjects/graph', element: <InterSubject /> },
-        { path: '/subjects/table', element: <InterSubject /> },
+        { path: '/subjects/graph', element: <InterSubject ids={ids} subjData = {subjData}/> },
+        { path: '/subjects/table', element: <InterSubject ids={ids} subjData = {subjData} /> },
         { path: '/subjects/:selectedId/table', element: < Subject selectedId={ selectedId } setSelectedId={ setSelectedId} ids= {ids}/> },
         { path: '/subjects/:selectedId/graph', element: < Subject selectedId={ selectedId } setSelectedId={ setSelectedId} ids= {ids}/> },
       ]

@@ -17,7 +17,7 @@ function SubjectPlot({ selectedId, features }: any) {
     useEffect(() => {
     setLoading(true);
 
-    fetch(`https://rebound-results-api.onrender.com/api/subjects/${selectedId}/${xFeat}-${yFeat}`)
+    fetch(`${import.meta.env.VITE_API}/api/subjects/${selectedId}/${xFeat}-${yFeat}`)
         .then((res) => res.json())
         .then((data) => {
         console.log("Jump data:", data);

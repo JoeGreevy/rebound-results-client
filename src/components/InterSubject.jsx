@@ -10,7 +10,7 @@ import InterSubjectTable from './InterSubjectTable'
 
 
 
-function InterSubject(  ) {
+function InterSubject( {ids, subjData} ) {
 
     const [results, setResults] = useState({})
     //const [plotData, setPlotData] = useState({})
@@ -27,7 +27,18 @@ function InterSubject(  ) {
     const end = location.pathname.slice(location.pathname.lastIndexOf('/') + 1);
 
     useEffect(() => {
-        fetch((`https://rebound-results-api.onrender.com/api/subjects/results`)).then((res) => res.json()).then((data) => {
+        fetch((`${import.meta.env.VITE_API}/api/subjects/results`), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(ids)
+        }).then((res) => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          return res.json()
+          }).then((data) => {
           setLoading(true)
           setResults(data)
           console.log("Fetching stats")
@@ -38,7 +49,7 @@ function InterSubject(  ) {
           setLoading(false)
           // console.log(data["mean_start"]["gct"]["SN101"])
         }).catch(err => console.error("Error fetching Stats:", err));
-      }, []);
+      }, [ids]);
 
 
     if (loading) return <div>Loading...</div>;
@@ -48,7 +59,7 @@ function InterSubject(  ) {
       //setPlotData(plotDataTemp)
       
       return (
-          <InterSubjectPlot results={results} features={features}  />
+          <InterSubjectPlot results={results} features={features} subjData={subjData}  />
       )
     }
     
