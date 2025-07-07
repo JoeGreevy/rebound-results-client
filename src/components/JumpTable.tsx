@@ -22,9 +22,9 @@ function JumpTable({ selectedId, columns, setColumns }: JumpTableProps) {
   const cols = columns.join("--")
 
   // Ordering
-  const [orderBy, setOrderBy] = useState(columns[0].key);
-  const [orderByCondition, setOrderByCondition] = useState<Condition>("start");
-  const [order, setOrder] = useState("desc");
+  // const [orderBy, setOrderBy] = useState(columns[0].key);
+  // const [orderByCondition, setOrderByCondition] = useState<Condition>("start");
+  // const [order, setOrder] = useState("desc");
 
 
   useEffect(() => {
