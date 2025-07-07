@@ -6,6 +6,9 @@ import { useState, useEffect } from 'react'
 import { featureNames } from '../assets/featureNames.js';
 import { useLocation } from 'react-router-dom';
 
+import { Feature } from '../assets/types'
+import { keyLookup } from '../assets/featureLookup'
+
 
 function Subject( { selectedId, setSelectedId, ids,} ) {
   

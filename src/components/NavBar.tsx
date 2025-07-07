@@ -20,8 +20,8 @@ function NavBar({selectedId, cohortMask, setCohortMask}: NavProps) {
     return (
         <>
         <nav>
-            <NavLink className={root === "/subjects" ? "active" : " "} to="/subjects/graph">All Subjects</NavLink> |{' '}
-            <NavLink className={root !== "/subjects" ? "active" : " "} to={`/subjects/${selectedId}/table`}>Individual Subjects</NavLink>
+            <NavLink className={root === "/subjects" ? "active" : " "} to={`/subjects/${end}`}>All Subjects</NavLink> |{' '}
+            <NavLink className={root !== "/subjects" ? "active" : " "} to={`/subjects/${selectedId}/${end}`}>Individual Subjects</NavLink>
         </nav>
         <nav>
             <NavLink className={end === "graph" ? "active" : " "} to={`${root}/graph`}>Graph</NavLink> |{' '}

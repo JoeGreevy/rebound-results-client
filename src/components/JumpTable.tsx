@@ -3,17 +3,28 @@ import { useState, useEffect } from 'react'
 
 import { mean } from 'mathjs'
 
+import { jumpTree } from '../assets/trees';
+import FeatureDropdown from './FeatureDropdown.jsx';
+
+
+
 interface JumpTableProps {
     selectedId: string;
     columns: string[];
     setColumns: (columns: string[]) => void;
 }
+import { Condition, Row, RowVal } from '../assets/types';
 
 function JumpTable({ selectedId, columns, setColumns }: JumpTableProps) {
   // Return a table of jumps for the selected subject
   const [jumpData, setJumpData]: any = useState([]);
   const [loading, setLoading] = useState(true);
-  const cols = columns.join("-")
+  const cols = columns.join("--")
+
+  // Ordering
+  const [orderBy, setOrderBy] = useState(columns[0].key);
+  const [orderByCondition, setOrderByCondition] = useState<Condition>("start");
+  const [order, setOrder] = useState("desc");
 
 
   useEffect(() => {
@@ -44,6 +55,7 @@ function JumpTable({ selectedId, columns, setColumns }: JumpTableProps) {
         <tr>
           {keys.map((key, idx) => (
             <th key={idx}>
+              {/* <FeatureDropdown tree={jumpTree} feature={xFeat} setter={setXFeat} /> */}
               <select value={columns[idx]}
                 onChange={(e) => {
                   const newColumns = [...columns];

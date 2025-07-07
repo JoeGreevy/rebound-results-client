@@ -5,9 +5,10 @@ import { useState, useEffect  } from 'react'
 import { createBrowserRouter,  RouterProvider, Navigate} from 'react-router-dom';
 
 import Subject from './components/Subject.jsx'
-import InterSubject from './components/InterSubject.jsx'
+import InterSubject from './components/InterSubject'
 import Layout from './components/Layout'
 import './App.css'
+
 
 import { cohorts } from './assets/cohorts'
 

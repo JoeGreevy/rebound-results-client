@@ -5,18 +5,22 @@ import { useLocation } from 'react-router'
 import InterSubjectPlot from './InterSubjectPlot' 
 import InterSubjectTable from './InterSubjectTable'
 
+import { Feature } from '../assets/types'
+
+import { keyLookup } from '../assets/featureLookup'
 
 
 
 
 
-function InterSubject( {ids, subjData} ) {
+
+function InterSubject( {ids, subjData}: any ) {
 
     const [results, setResults] = useState({})
     //const [plotData, setPlotData] = useState({})
     const [loading, setLoading] = useState(true)
-    const [features, setFeatures] = useState([])
-    const [columns, setColumns] = useState([])
+    const [features, setFeatures] = useState<Feature[]>([])
+    const [columns, setColumns] = useState<Feature[]>([])
     
 
 
@@ -44,8 +48,11 @@ function InterSubject( {ids, subjData} ) {
           console.log("Fetching stats")
           const feats = Object.keys(data["mean_start"])
           console.log(feats)
-          setFeatures(feats)
-          setColumns(feats.slice(0, 4))
+          const features = feats.map((feat) => {
+            return keyLookup(feat)
+          })
+          setFeatures(features)
+          setColumns(features.slice(0, 4))
           setLoading(false)
           // console.log(data["mean_start"]["gct"]["SN101"])
         }).catch(err => console.error("Error fetching Stats:", err));

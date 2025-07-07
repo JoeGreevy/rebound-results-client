@@ -3,6 +3,9 @@ import { Data } from 'plotly.js';
 import { featureNames } from '../assets/featureNames.js';
 
 import { useState } from 'react'
+import FeatureDropdown from './FeatureDropdown.jsx';
+import { featureLookup } from '../assets/featureLookup';
+import { interSubjectTree } from '../assets/trees';
 
 import { cohorts } from '../assets/cohorts';
 import { inv } from 'mathjs';
@@ -11,8 +14,9 @@ import { inv } from 'mathjs';
 
 function InterSubjectPlot({ results, features, subjData }: any) {
 
-    const [xFeat, setXFeat] = useState("gct")
-    const [yFeat, setYFeat] = useState("rsi")
+    const [xFeat, setXFeat] = useState(featureLookup(["performance", "gct"]));
+    const [yFeat, setYFeat] = useState(featureLookup(["performance", "rsi"]));
+    console.log("Rendering InterSubjectPlot with features: " + xFeat.key + ", " + yFeat.key);
 
     const ids = Object.keys(results["mean_start"]["gct"]) as string[];
     const allTags = subjData.map((m:any) => m.tags.join("-"));
@@ -29,8 +33,8 @@ function InterSubjectPlot({ results, features, subjData }: any) {
     const cols = ["rgba(0.6922722 , 0.0922722 , 0.16770473, 0.9)", "rgba(0.12725875, 0.39584775, 0.66874279, 0.9)"  ]
     const plotData: Data[] = mean_dfs.map((name:string, idx:number)=> {
         return {
-        x: Object.values(results[name][xFeat]) as number[],
-        y: Object.values(results[name][yFeat]) as number[],
+        x: Object.values(results[name][xFeat.key]) as number[],
+        y: Object.values(results[name][yFeat.key]) as number[],
         text: ids,
         customdata: Object.values(results[name]["rsi"]) as number[],
         mode: 'markers',
@@ -38,6 +42,7 @@ function InterSubjectPlot({ results, features, subjData }: any) {
           symbol: symbols,
           size: 10,
           color: cols[idx],
+          
         },
         type: "scatter", 
         hovertemplate : "%{text}<br>RSI: %{customdata:.2f} (s/s)", 
@@ -49,8 +54,8 @@ function InterSubjectPlot({ results, features, subjData }: any) {
 
     const connectors: Data[] = ids.map((id: string) => {
       return {
-        x: [results["mean_start"][xFeat][id], results["mean_end"][xFeat][id]],
-        y: [results["mean_start"][yFeat][id], results["mean_end"][yFeat][id]],
+        x: [results["mean_start"][xFeat.key][id], results["mean_end"][xFeat.key][id]],
+        y: [results["mean_start"][yFeat.key][id], results["mean_end"][yFeat.key][id]],
         mode: 'lines',
         type: 'scatter',
         line: {
@@ -99,34 +104,23 @@ function InterSubjectPlot({ results, features, subjData }: any) {
       }
     });
 
+
+
+
+
+
     return (
     <>
         <div className="graphNav">
           <span>X-Axis</span>
-          <select
-            value={xFeat}
-            onChange={e => setXFeat(e.target.value)}
-          >
-            
-              { features.map((f:string, fIdx:number) => (
-                  <option key={fIdx} value={f}>{featureNames[f]}</option>
-              ))}
-          </select>
+          <FeatureDropdown tree={interSubjectTree} feature={xFeat} setter={setXFeat}/>
           <span>Y Axis</span>
-            <select
-              value={yFeat}
-              onChange={e => setYFeat(e.target.value)}
-            >
-        
-              { features.map((f:string, fIdx:number) => (
-                  <option key={fIdx} value={f}>{featureNames[f]}</option>
-              ))}
-          </select>
+            <FeatureDropdown tree={interSubjectTree} feature={yFeat} setter={setYFeat}/>
         </div>
         <Plot data={[ plotData, leg_traces, connectors, effect ].flat()}
         layout={{
-          title: { text : featureNames[yFeat] + " vs " + featureNames[xFeat] }, 
-          xaxis : { title: { text : featureNames[xFeat],
+          title: { text : yFeat.name + " vs " + xFeat.name }, 
+          xaxis : { title: { text : xFeat.name,
                     font : { size:20 }
            },
                     showgrid: true,
@@ -134,7 +128,7 @@ function InterSubjectPlot({ results, features, subjData }: any) {
                     zeroline: false,
                     mirror:true,
                     linewidth: 3 },
-          yaxis : { title: { text : featureNames[yFeat],
+          yaxis : { title: { text : yFeat.name,
                               font: {size : 20} },
                     showgrid: true,
                     showline: true,
