@@ -20,7 +20,9 @@ function InterSubject( {ids, subjData}: any ) {
     //const [plotData, setPlotData] = useState({})
     const [loading, setLoading] = useState(true)
     const [features, setFeatures] = useState<Feature[]>([])
-    const [columns, setColumns] = useState<Feature[]>([])
+    
+    const initColNames = ["gct", "jh", "rsi", "mom-both-ank-avg_mom"]
+    const [columns, setColumns] = useState<Feature[]>(initColNames.map((name) => keyLookup(name)))
     
 
 
@@ -46,13 +48,7 @@ function InterSubject( {ids, subjData}: any ) {
           setLoading(true)
           setResults(data)
           console.log("Fetching stats")
-          const feats = Object.keys(data["mean_start"])
-          console.log(feats)
-          const features = feats.map((feat) => {
-            return keyLookup(feat)
-          })
           setFeatures(features)
-          setColumns(features.slice(0, 4))
           setLoading(false)
           // console.log(data["mean_start"]["gct"]["SN101"])
         }).catch(err => console.error("Error fetching Stats:", err));
@@ -66,12 +62,12 @@ function InterSubject( {ids, subjData}: any ) {
       //setPlotData(plotDataTemp)
       
       return (
-          <InterSubjectPlot results={results} features={features} subjData={subjData}  />
+          <InterSubjectPlot results={results} subjData={subjData}  />
       )
     }
     
     return (
-      <InterSubjectTable results={results} features={features} columns={columns} setColumns={setColumns} />
+      <InterSubjectTable results={results} columns={columns} setColumns={setColumns} />
       
     )
     

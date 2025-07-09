@@ -4,7 +4,7 @@ export interface Feature {
     key: string;
 }
 
-export type Condition = "start" | "end";
+export type Condition = "start" | "end" | "trial";
 export interface RowVal {
   key: string;
   val: number;
@@ -13,5 +13,6 @@ export interface RowVal {
 }
 export interface Row {
   id : string;
+  date: string;
   vals: RowVal[];
 }

@@ -17,31 +17,21 @@ export function featureLookup(cats: string[]): Feature  {
                 key: f
             }
         } else if (cats[0] === "kinetics"){
-            if (cats[1] === "pow") {
-                const joint = cats[2]; // might have to change
-                const jointDisplay = shortToLong[joint].charAt(0).toUpperCase() + shortToLong[joint].slice(1);
-                if (cats[3] === "both"){
-                    return {
-                        name: jointDisplay + " (L-R) " + featureNames[f],
-                        category: shortToLong[cats[1]],
-                        key: "pow-"+ cats[3] +"-" + joint + "-" + f
-                    }
-                }
-            } else if (cats[1] === "mom") {
-                // kinetics-mom-joint-side-feature
-                const joint = cats[2]; // might have to change
-                const jointDisplay = shortToLong[joint].charAt(0).toUpperCase() + shortToLong[joint].slice(1);
-                let side = cats[3]
-                
-                
-                return {
-                    name: jointDisplay + " (L-R) " + featureNames[f],
-                    category: shortToLong[cats[1]],
-                    key: "mom-"+ cats[3] +"-" + joint + "-" + f
-                }
-                
+            // kinetics-mom-joint-side-feature
+            const joint = cats[2]; // might have to change
+            const jointDisplay = shortToLong[joint].charAt(0).toUpperCase() + shortToLong[joint].slice(1);
+            let sideDisplay = cats[3].charAt(0).toUpperCase() + cats[3].slice(1);
+            if (sideDisplay === "Both"){
+                sideDisplay = "(L-R)";
+            }
+            
+            return {
+                name: jointDisplay + " "+ sideDisplay +" " + featureNames[f],
+                category: shortToLong[cats[1]],
+                key: cats[1]+"-"+ cats[3] +"-" + joint + "-" + f
             }
         }else if (cats[0] === "kin") {
+            // Kinematics Features
             const joint = cats[1];
             const jointDisplay = shortToLong[joint].charAt(0).toUpperCase() + shortToLong[joint].slice(1);
             const side = cats[2];
@@ -101,10 +91,24 @@ export function keyLookup (key: string): Feature {
             key: key
         }
     }
+    
     const cats = parts.slice(0, -1);
+    const joint = cats[2];
+    let jointDisplay = "";
+    
+    jointDisplay = shortToLong[joint].charAt(0).toUpperCase() + shortToLong[joint].slice(1);
+    
+    
+    const side = cats[1];
+    let sideDisplay = "";
+    if (side === "both") {
+        sideDisplay = "(L-R)";
+    }else{
+        sideDisplay = side.charAt(0).toUpperCase() + side.slice(1);
+    }   
     const f = parts[parts.length - 1];
     return {
-        name: featureNames[f],
+        name: jointDisplay + " " + sideDisplay + " " + featureNames[f],
         category: shortToLong[cats[0]],
         key: key
     }

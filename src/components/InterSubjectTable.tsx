@@ -27,18 +27,16 @@ import { keyLookup } from '../assets/featureLookup';
 
 interface InterSubjectTableProps {
     results: any;
-    features: Feature[];
     columns: Feature[];
     setColumns: (columns: Feature[]) => void;
 }
 
 import { Condition, Row, RowVal } from '../assets/types';
 
-function InterSubjectTable({ results, features, columns, setColumns }: InterSubjectTableProps) {
+function InterSubjectTable({ results, columns, setColumns }: InterSubjectTableProps) {
   // Return a table of jumps for the selected subject
   const [loading, setLoading] = useState(false);
-  const feats = features.join("-")
-  const ids = Object.keys(results["mean_start"][features[0].key])
+  const ids = Object.keys(results["mean_start"])
   
   const [orderBy, setOrderBy] = useState(columns[0].key);
   const [orderByCondition, setOrderByCondition] = useState<Condition>("start");
@@ -59,25 +57,29 @@ function InterSubjectTable({ results, features, columns, setColumns }: InterSubj
       handleRequestSort(event, property, condition,  dir);
     };
   
-  const conditionNames: Condition[] = ["start", "end"];
-  const [conditions, setConditions] = useState<boolean[]>([true, false]);
+  const conditionNames: Condition[] = ["start", "end", "trial"];
+  const conditionDisplayNames: string[] = ["Non-Fatigued", "Fatigued", "10-5 Test"];
+  const [conditions, setConditions] = useState<boolean[]>([true, false, false]);
   
   
-  const rows: Row[] = ids.map((id) => {
+  const rows: Row[] = ids.flatMap((id) => {
+    return Object.keys(results["mean_start"][id]).map((date: string) => {
       return {
         id: id,
+        date: date,
         vals: columns.flatMap((col) => {
           return conditionNames.filter((_, condIdx) => conditions[condIdx]).map((condition) =>{
             const df_key = `mean_${condition}`;
             return {
               key: col.key,
-              val: results[df_key][col.key][id],
-              std: results[`std_${condition}`][col.key][id],
+              val: results[df_key]?.[id]?.[date]?.[col.key] ?? NaN,
+              std: results[`std_${condition}`]?.[id]?.[date]?.[col.key] ?? NaN,
               condition: condition
             };
           });
         }),
       }
+    })
   });
 
   const sortedRows = rows.sort((a, b) => {
@@ -88,12 +90,12 @@ function InterSubjectTable({ results, features, columns, setColumns }: InterSubj
       bVal = Number(b.id.slice(-3));
     }
     if (aVal === undefined || bVal === undefined) {
-      return 0; // If the value is not found, treat them as equal
+      return -1; // If the value is not found, treat them as equal
     }else if(aVal < bVal){
       if (order === "asc"){
-        return -1; // aVal is less than bVal
+        return -1; // Don't switch
       }else{
-        return 1; // aVal is less than bVal
+        return 1; // switch
       }
     } else if (aVal > bVal) {
       if (order === "asc"){
@@ -101,6 +103,13 @@ function InterSubjectTable({ results, features, columns, setColumns }: InterSubj
       }else{
         return -1; // aVal is greater than bVal
       }
+    } else if (isNaN(aVal) && !isNaN(bVal)) {
+      return 1;
+
+    }
+    else if (isNaN(bVal) && !isNaN(aVal)) {
+      return -1;
+
     } else {
       return 0; // aVal is equal to bVal
     }
@@ -160,8 +169,14 @@ function InterSubjectTable({ results, features, columns, setColumns }: InterSubj
     <>
     <div className="table-controls">
       <FormGroup row={true}>
-        <FormControlLabel control={<Checkbox checked={conditions[0]} onChange={() => condUpdate(0)} />} label="Non-Fatigued" labelPlacement='start' />
-        <FormControlLabel control={<Checkbox checked={conditions[1]}/>} onChange={() => condUpdate(1)} label="Fatigued" labelPlacement='start' />
+        { conditionNames.map((condition, idx) => (
+          <FormControlLabel 
+            key={idx} 
+            control={<Checkbox checked={conditions[idx]} onChange={() => condUpdate(idx)} />} 
+            label={conditionDisplayNames[idx]} 
+            labelPlacement='start' 
+          />
+        ))}
       </FormGroup>
       <FormGroup row={true}>
         <FormControlLabel control={<Switch checked={showDevs} onChange={(ev) => setShowDevs(ev.target.checked)} />} label="Show Deviations" labelPlacement='start' />
@@ -198,6 +213,34 @@ function InterSubjectTable({ results, features, columns, setColumns }: InterSubj
             </span>
             <span>ID</span>
         </TableCell>
+        <TableCell
+            sortDirection={"date" === orderBy ? "desc" : false}
+            align="left"
+            sx={cellStyle}>
+            <span className="icons">
+              <TableSortLabel
+                active={"date" === orderBy && order === "desc"}
+                direction="desc"
+                onClick={createSortHandler("date", "start", "desc")}
+                sx={styleObj}
+              >
+                <Box component="span" sx={visuallyHidden}>
+                  sorted descending
+                </Box>
+              </TableSortLabel>
+              <TableSortLabel
+                active={"date" === orderBy && order === "asc"}
+                direction="asc"
+                sx={styleObj}
+                onClick={createSortHandler("date", "start", "asc")}
+              >
+                <Box component="span" sx={visuallyHidden}>
+                  sorted ascending
+                </Box>
+              </TableSortLabel>
+            </span>
+            <span>Date</span>
+        </TableCell>
         {columns.map((col:Feature, idx:number) => (
           <TableCell 
             key={idx} 
@@ -233,6 +276,7 @@ function InterSubjectTable({ results, features, columns, setColumns }: InterSubj
       </TableRow>
       <TableRow>
         <TableCell sx={cellStyle}></TableCell>
+        <TableCell sx={cellStyle}></TableCell>
         {columns.map((col, idx) => (
           conditionNames.map((condition, condIdx) => (
             conditions[condIdx] ? (
@@ -259,7 +303,7 @@ function InterSubjectTable({ results, features, columns, setColumns }: InterSubj
                     </Box>
                   </TableSortLabel>
                 </span>
-                {condition.charAt(0).toUpperCase() + condition.slice(1)} {showDevs ? "(SD)" : ""}
+                {conditionDisplayNames[condIdx]} {showDevs ? "(SD)" : ""}
               </TableCell>
             ) : null
           ))
@@ -271,6 +315,7 @@ function InterSubjectTable({ results, features, columns, setColumns }: InterSubj
       { sortedRows.map((row, rowIndex) => (
         <TableRow key={rowIndex+1}>
           <TableCell>{row.id}</TableCell>
+          <TableCell>{ row.date }</TableCell>
           {row.vals.map((val, idx) => (
             <TableCell key={idx} align="right">
               {val.val.toFixed(3)} {showDevs ? `(${val.std.toFixed(2)})` : ""}
