@@ -66,6 +66,9 @@ export const shortToLong: { [key: string]: string } = {
     "start_time": "landing time",
     "idx": "jump index",
     "time": "time",
+
+    "30": "30 sec",
+    "10": "10-5 test"
 }
 
 export const perfFeats = ["rsi", "rsi_adj", "gct", "jh", "ft",

@@ -40,12 +40,21 @@ function SubMenu({ obj, parents, setter}){
         const feature = featureLookup(newParents)
         return (
             <DropdownMenu.Item key={obj.name} onSelect={() => {
-                console.log("Getting: " + feature.key)
+                //console.log("Getting: " + feature.key)
                 setter(feature)
             }}>
                 <span>{ featureNames[obj.name] }</span>
             </DropdownMenu.Item> 
         )    
+    } else if (obj.type === "subj" || obj.type === "date" || obj.type === "pro") {
+        return (
+            <DropdownMenu.Item className="subj-item" key={obj.name} onSelect={() => {
+                //console.log("Getting: " + obj.key)
+                setter(obj.key)
+            }}>
+                <span>{obj.name }</span>
+            </DropdownMenu.Item> 
+        )
     }
 }
 

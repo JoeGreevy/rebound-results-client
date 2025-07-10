@@ -310,13 +310,21 @@ function InterSubjectPlot({ results, subjData }: any) {
                       showline: true,
                       zeroline: false,
                       mirror:true,
-                      linewidth: 3 },
+                      linewidth: 3,
+                      tickfont: {
+                        size: 16,
+                        family: 'Arial, sans-serif'
+                      } },
             yaxis : { title: { text : yFeat.name,
                                 font: {size : 20} },
                       showgrid: true,
                       showline: true,
                       mirror: true,
                       linewidth: 3,
+                      tickfont: {
+                        size: 16,
+                        family: 'Arial, sans-serif'
+                      }
                       },
             showlegend: true,
             legend: {
@@ -326,6 +334,7 @@ function InterSubjectPlot({ results, subjData }: any) {
               yanchor: 'top',
               orientation: 'h'
             },
+            
             width : 1200,
             height: 800,
           }}

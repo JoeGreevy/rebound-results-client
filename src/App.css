@@ -115,4 +115,16 @@ a {
   font-size: 1em;
 }
 
+.feature-dropdown button{
+  font-size: 1.2em;
+  padding: 0.5em  1em;
+}
+.subj-item{
+  font-size: 1.2em;
+}
 
+
+
+div:has(> div.subj-item) {
+  min-width: 120px;
+}
