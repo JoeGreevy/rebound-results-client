@@ -37,13 +37,13 @@ function Subject( { selectedId, setSelectedId, ids,} ) {
           setSubjData(data)
           setLoading(false);
         }).catch(err => console.error("Error fetching subject:", err));
-      }, [selectedId]);
+      }, [selectedId, pro, date, loading]);
 
   useEffect(() => {
     if (subjData[date] && subjData[date][pro]) {
       setMass(subjData[date][pro].mass);
     }
-  }, [date]);
+  }, [date, pro, subjData]);
 
   // Columns to display in the table
   const initColNames = ["gct", "jh", "rsi", "mom-both-ank-avg_mom"]

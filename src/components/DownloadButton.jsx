@@ -4,6 +4,7 @@ function DownloadButton({ selectedId, pro, date, features, mass }) {
 
     const handleDownload = async () => {
         try {
+            console.log("Sending download request with:", { selectedId, pro, date, feats, mass });
             const response = await fetch(`${import.meta.env.VITE_API}/api/download_csv/`, {
                 method: 'POST',
                 headers: {
