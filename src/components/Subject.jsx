@@ -75,7 +75,7 @@ function Subject( { selectedId, setSelectedId, ids,} ) {
         <FeatureDropdown  tree={dateTree} feature={{name: date}} setter={setDate} />
         <FeatureDropdown  tree={proTree} feature={{name: shortToLong[pro]}} setter={setPro} />
         <span>Weight: {mass.toFixed(0)} kg ({ (mass*9.81).toFixed(0) } N)</span>
-        < DownloadButton selectedId={selectedId} features={columns} mass={mass} />
+        < DownloadButton selectedId={selectedId} pro={pro} date={date} features={ columns.map(col => col.key) } mass={mass} />
       </div>
         
         

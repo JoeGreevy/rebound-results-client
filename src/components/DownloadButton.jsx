@@ -1,8 +1,21 @@
-function DownloadButton({ selectedId, features, mass }) {
-    const feats = features.join("-");
+function DownloadButton({ selectedId, pro, date, features, mass }) {
+    const feats = features.join("--");
+    //console.log("Initializing DownloadButton with:", { selectedId, pro, date, feats, mass });
+
     const handleDownload = async () => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API}/api/download_csv/${selectedId}/${feats}`);
+            const response = await fetch(`${import.meta.env.VITE_API}/api/download_csv/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: selectedId,
+                    features: feats,
+                    pro: pro,
+                    date: date
+                })
+            });
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -12,7 +25,7 @@ function DownloadButton({ selectedId, features, mass }) {
 
             const a = document.createElement('a');
             a.href= url;
-            a.download = `${selectedId}-${mass}.csv`; 
+            a.download = `${selectedId}-${mass.toFixed(2)}.csv`; 
             document.body.appendChild(a);
             a.click();
             a.remove();
