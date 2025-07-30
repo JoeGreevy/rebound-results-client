@@ -14,6 +14,9 @@ export const featureNames: { [key: string]: string } = {
     "vel_change" : "Velocity Change (m/s)", 
     "avg_ecc": "Average Eccentric Force (BW)", 
     "avg_conc": "Average Concentric Force (BW)",
+    "peak_disp_val": "Peak Displacement(m)",
+    "peak_disp_loc": "Peak Displacement Loc",
+    "leg_stiffness": "Leg Stiffness (kN/m)",
     "xxx": " ",
 
     // Power Features
@@ -72,4 +75,4 @@ export const shortToLong: { [key: string]: string } = {
 }
 
 export const perfFeats = ["rsi", "rsi_adj", "gct", "jh", "ft",
-    "avg_force", "peak", "peak_loc", "vel_change", "avg_ecc", "avg_conc"];
+    "avg_force", "peak", "peak_loc", "peak_disp_val", "peak_disp_loc", "leg_stiffness", "vel_change", "avg_ecc", "avg_conc"];

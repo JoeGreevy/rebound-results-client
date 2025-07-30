@@ -1,3 +1,5 @@
+import { name } from "plotly.js/lib/scatter";
+
 const powerFeats = [
         { name: "pc", type: "item" },
         { name: "pe", type: "item" },
@@ -86,7 +88,10 @@ const perfTree = {
     { name: "peak_loc", type: "item"},
     { name: "vel_change", type: "item"},
     { name: "avg_ecc", type: "item" },
-    { name: "avg_conc", type: "item" }
+    { name: "avg_conc", type: "item" },
+    { name: "peak_disp_val", type: "item" },
+    { name: "peak_disp_loc", type: "item" },
+    { name: "leg_stiffness", type: "item" }
     ] 
 }
 const timeTree = {
