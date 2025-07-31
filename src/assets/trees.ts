@@ -81,6 +81,7 @@ const perfTree = {
     children: [
     { name: "gct", type: "item" },
     { name: "rsi", type: "item" },
+    { name: "rsi_adj", type: "item" },
     { name: "jh", type: "item"},
     { name: "ft", type: "item"},
     { name: "avg_force", type: "item"},

@@ -47,8 +47,15 @@ function JumpTable({ data, id, date, pro, columns, setColumns }: JumpTableProps)
   let rows:any = [];
   //console.log(data[date][pro]);
   rows = Array.from({length: rowCount}).map((_, idx: number) => {
+    let cat = 0;
+    if (pro == "30"){
+      cat = data[date][pro]["start_inds"].includes(idx) ? 1 : data[date][pro]["end_inds"].includes(idx) ? 2 : 0
+    }else {
+      cat = data[date][pro]["trial_indices"].includes(idx) ? 1 : 0;
+    }
     return {
       idx: idx,
+      inc: cat,
       vals: columns.map((col: Feature) => {
         //console.log("Col Key:", col.key);
         return data[date][pro][col.key][idx];
@@ -77,6 +84,7 @@ function JumpTable({ data, id, date, pro, columns, setColumns }: JumpTableProps)
       <TableHead>
         <TableRow>
           <TableCell>Index</TableCell>
+          <TableCell>Included</TableCell>
           {columns.map((feat, idx) => (
             <TableCell key={idx}>
               <FeatureDropdown key={idx} tree={jumpTree} feature={feat} setter={(feat:Feature) => changeCols(idx, feat)}/>
@@ -133,6 +141,7 @@ function JumpTable({ data, id, date, pro, columns, setColumns }: JumpTableProps)
           return (
             <TableRow key={idx}>
               <TableCell>{row.idx}</TableCell>
+              <TableCell>{row.inc}</TableCell>
               {row.vals.map((val: number, valIdx: number) => {
                   return (
                     <TableCell key={valIdx}>
